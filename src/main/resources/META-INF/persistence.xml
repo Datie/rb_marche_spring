@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="rb" transaction-type="RESOURCE_LOCAL">
+    	<class>com.fdkservice.rbmarche.entity.Plan</class>
+		<class>com.fdkservice.rbmarche.entity.Line</class>
+        <class>com.fdkservice.rbmarche.entity.Shelve</class>
+        <class>com.fdkservice.rbmarche.entity.Board</class>
+        <class>com.fdkservice.rbmarche.entity.ShelveType</class>
+        
+    	<properties>
+      		<property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+      		<property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3306/rbmarche" />
+      		<property name="jakarta.persistence.jdbc.user"   value="ian" />
+      		<property name="jakarta.persistence.jdbc.password" value="password" />
+      		<property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      		<property name="jakarta.persistence.schema-generation.create-source" value="script"/>
+        	<property name="jakarta.persistence.schema-generation.create-script-source" value="META-INF/sql/create.sql" />
+        	<property name="jakarta.persistence.sql-load-script-source" value="META-INF/sql/data.sql" />
+        	<property name="jakarta.persistence.schema-generation.drop-source" value="script" />
+        	<property name="jakarta.persistence.schema-generation.drop-script-source" value="META-INF/sql/drop.sql" />
+      		<property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect" />
+      		<property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.DefaultSessionLog"/>
+			<property name="eclipselink.logging.level" value="INFO"/>
+    	</properties>
+    </persistence-unit>
+</persistence>
