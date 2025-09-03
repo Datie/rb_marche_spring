@@ -27,29 +27,34 @@ class ServiceTest {
 	@Autowired
 	private SetService setService;
 	
-	@Test
-	@Order(1) 
-	
-	void testShelveType() {
+	void deleteAll() {
 		setService.deleteAllBoard();
 		setService.deleteAllShelves();
 		setService.deleteAllShelveType();
 		setService.deleteAllLines();
 		setService.deleteAllPlans();
+	}
+	
+	void deleteAllExceptShelveType() {
+		setService.deleteAllBoard();
+		setService.deleteAllShelves();
+		//setService.deleteAllShelveType();
+		setService.deleteAllLines();
+		setService.deleteAllPlans();
+	}
+	
+	@Test
+	@Order(1) 
+	
+	void testShelveType() {
+		deleteAll();
 		ShelveType st = new ShelveType();
-		st.setCreatedAt(new Date());
-		st.setHeight(210);
-		st.setWidth(100);
-		st.setLength(150);
-		st.setName("210");
-		List<ShelveType> list = new ArrayList<ShelveType>();
-		list.add(st);
-		st = new ShelveType();
 		st.setCreatedAt(new Date());
 		st.setHeight(180);
 		st.setWidth(100);
 		st.setLength(150);
 		st.setName("180");
+		List<ShelveType> list = new ArrayList<ShelveType>();
 		list.add(st);
 		st = new ShelveType();
 		st.setCreatedAt(new Date());
@@ -57,6 +62,13 @@ class ServiceTest {
 		st.setWidth(100);
 		st.setLength(150);
 		st.setName("200");
+		list.add(st);
+		st = new ShelveType();
+		st.setCreatedAt(new Date());
+		st.setHeight(210);
+		st.setWidth(100);
+		st.setLength(150);
+		st.setName("210");
 		list.add(st);
 		setService.createShelveType(list);
 		assertTrue(setService.getCountOfAllShelveType() == 3);
@@ -96,6 +108,7 @@ class ServiceTest {
 		List<Line> lines = setService.getAllLines();
 		List<ShelveType> shelveTypes = setService.getAllShelveTypes();
 		Shelve shelve;
+		int seed = 10;
 		for(int i = 0;i < lines.size();i++) {
 			Line line = lines.get(i);
 			for(int j = 0;j < 10;j++) {
@@ -125,7 +138,13 @@ class ServiceTest {
 			}
 			
 		}
-		assertTrue(setService.getAllBoards().size() == 540);
+		assertTrue(setService.getAllBoards().size() == setService.getAllShelves().size() * 6);
+	}
+	
+	@Test
+	@Order(6)
+	void clear() {
+		deleteAllExceptShelveType();
 	}
 	
 }
