@@ -62,6 +62,10 @@ public class SetService {
 		shelveRepository.deleteAll();
 	}
 	
+	public Plan getPlanById(Long id) {
+		return planRepository.findById(id).get();
+	}
+	
 	public List<Shelve> getAllShelves() {
 		return shelveRepository.findAll();
 	}
@@ -90,6 +94,10 @@ public class SetService {
 		lineRepository.deleteAll();
 	}
 	
+	public Line getLineById(Long id) {
+		return lineRepository.findById(id).get();
+	}
+	
 	public List<Line> getAllLines() {
 		return lineRepository.findAll();
 	}
@@ -110,6 +118,19 @@ public class SetService {
 			shelveRepository.delete(shelves.get(i));
 		}
 		lineRepository.deleteById(id);
+	}
+	
+	public Shelve getShelveById(Long id) {
+		return this.shelveRepository.findById(id).get();
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void deleteShelveById(Long id) {
+		List<Board> boards = shelveRepository.findById(id).get().getBoards();
+		for(int i = 0;boards != null && i < boards.size();i++) {
+			boardRepository.delete(boards.get(i));
+		}
+		shelveRepository.deleteById(id);
 	}
 
 	public List<ShelveType> getAllShelveTypes() {
@@ -137,6 +158,10 @@ public class SetService {
 	
 	public List<Board> getAllBoards() {
 		return boardRepository.findAll();
+	}
+	
+	public ShelveType getShelveTypeById(Long id) {
+		return shelveTypeRepository.findById(id).get();
 	}
 
 }
