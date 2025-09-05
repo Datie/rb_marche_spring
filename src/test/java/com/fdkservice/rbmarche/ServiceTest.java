@@ -70,7 +70,7 @@ class ServiceTest {
 		st.setLength(150);
 		st.setName("210");
 		list.add(st);
-		setService.createShelveType(list);
+		setService.saveShelveType(list);
 		assertTrue(setService.getCountOfAllShelveType() == 3);
 	}
 	
@@ -81,7 +81,7 @@ class ServiceTest {
 		plan.setCreatedAt(new Date());
 		plan.setName("TULLINS_INTER2");
 		plan.setPathSize(2);
-		plan = setService.createPlan(plan);
+		plan = setService.savePlan(plan);
 		assertTrue(setService.getAllPlans().size() == 1);
 	}
 	
@@ -92,12 +92,12 @@ class ServiceTest {
 		Line line = new Line();
 		line.setCreatedAt(new Date());
 		line.setPlan(plan);
-		setService.createLine(line);
+		setService.saveLine(line);
 		for(int i = 0;i < 8;i++) {
 			line = new Line();
 			line.setCreatedAt(new Date());
 			line.setPlan(plan);
-			setService.createLine(line);
+			setService.saveLine(line);
 		}		
 		assertTrue(setService.getAllLines().size() == 9);
 	}
@@ -108,7 +108,6 @@ class ServiceTest {
 		List<Line> lines = setService.getAllLines();
 		List<ShelveType> shelveTypes = setService.getAllShelveTypes();
 		Shelve shelve;
-		int seed = 10;
 		for(int i = 0;i < lines.size();i++) {
 			Line line = lines.get(i);
 			for(int j = 0;j < 10;j++) {
@@ -116,7 +115,7 @@ class ServiceTest {
 				shelve.setLine(line);
 				shelve.setCreatedAt(new Date());
 				shelve.setShelveType(shelveTypes.get(j/4));
-				setService.createShelve(shelve);
+				setService.saveShelve(shelve);
 			}			
 		}		
 		assertTrue(setService.getAllShelves().size() == 90);
@@ -134,7 +133,7 @@ class ServiceTest {
 				board.setCreatedAt(new Date());
 				board.setFace((j%2==0)?"A":"B");
 				board.setPosition(40*(j/2 + 1));
-				setService.createBoard(board);
+				setService.saveBoard(board);
 			}
 			
 		}
@@ -144,7 +143,7 @@ class ServiceTest {
 	@Test
 	@Order(6)
 	void clear() {
-		deleteAllExceptShelveType();
+		//deleteAllExceptShelveType();
 	}
 	
 }

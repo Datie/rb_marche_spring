@@ -1,7 +1,6 @@
 package com.fdkservice.rbmarche.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,7 +67,7 @@ public class SetService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Shelve createShelve(Shelve shelve) {
+	public Shelve saveShelve(Shelve shelve) {
 		return shelveRepository.save(shelve);
 	}	
 	
@@ -82,7 +81,7 @@ public class SetService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Plan createPlan(Plan plan) {
+	public Plan savePlan(Plan plan) {
 		return planRepository.save(plan);
 	}
 	
@@ -96,8 +95,21 @@ public class SetService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public Line createLine(Line line) {
+	public Line saveLine(Line line) {
 		return lineRepository.save(line);
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void deleteLineById(Long id) {
+		List<Shelve> shelves = lineRepository.findById(id).get().getShelves();
+		for(int i = 0;shelves != null && i < shelves.size();i++) {
+			List<Board> boards = shelves.get(i).getBoards();
+			for(int j = 0;boards != null && j < boards.size();j++) {
+				boardRepository.delete(boards.get(j));
+			}
+			shelveRepository.delete(shelves.get(i));
+		}
+		lineRepository.deleteById(id);
 	}
 
 	public List<ShelveType> getAllShelveTypes() {
@@ -110,11 +122,11 @@ public class SetService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void createShelveType(Iterable<ShelveType> entities) {
+	public void saveShelveType(Iterable<ShelveType> entities) {
 		shelveTypeRepository.saveAll(entities);
 	}
 	
-	public Board createBoard(Board board) {
+	public Board saveBoard(Board board) {
 		return boardRepository.save(board);
 	}
 
