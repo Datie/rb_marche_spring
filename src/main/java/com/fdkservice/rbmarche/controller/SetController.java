@@ -48,6 +48,10 @@ public class SetController {
 		return setService.savePlan(nPlan);
 	}
 	
+	@RequestMapping(value = "/Board", produces = "application/json", method = RequestMethod.POST)
+	public void savePlan(@RequestBody ShelveB shelve) {
+	}
+	
 	@RequestMapping(value = "/Line", produces = "application/json", method = RequestMethod.POST)
 	public Plan saveLine(@RequestBody LineB lineB) {
 		Line line;
