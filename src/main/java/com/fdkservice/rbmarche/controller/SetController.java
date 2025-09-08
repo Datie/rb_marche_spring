@@ -1,5 +1,6 @@
 package com.fdkservice.rbmarche.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fdkservice.rbmarche.entity.Board;
 import com.fdkservice.rbmarche.entity.Line;
 import com.fdkservice.rbmarche.entity.Plan;
 import com.fdkservice.rbmarche.entity.Shelve;
 import com.fdkservice.rbmarche.entity.ShelveType;
+import com.fdkservice.rbmarche.pojo.BoardB;
 import com.fdkservice.rbmarche.pojo.LineB;
+import com.fdkservice.rbmarche.pojo.PlanB;
 import com.fdkservice.rbmarche.pojo.ShelveB;
 import com.fdkservice.rbmarche.service.SetService;
 
@@ -40,10 +44,15 @@ public class SetController {
 	}
 	
 	@RequestMapping(value = "/Plan", produces = "application/json", method = RequestMethod.POST)
-	public Plan savePlan(@RequestBody Plan plan) {
-		Plan nPlan = new Plan();
-		nPlan.setCreatedAt(new Date());
-		nPlan.setName(plan.getName());
+	public Plan savePlan(@RequestBody PlanB plan) {
+		Plan nPlan;
+		if(plan == null || plan.getId() == null || plan.getId() == -1) {
+			nPlan = new Plan();
+			nPlan.setName(plan.getName());
+		} else {
+			nPlan = setService.getPlanById(plan.getId());
+		}
+		nPlan.setCreatedAt(new Date());		
 		nPlan.setPathSize(plan.getPathSize());
 		return setService.savePlan(nPlan);
 	}
@@ -53,7 +62,7 @@ public class SetController {
 	}
 	
 	@RequestMapping(value = "/Line", produces = "application/json", method = RequestMethod.POST)
-	public Plan saveLine(@RequestBody LineB lineB) {
+	public Line saveLine(@RequestBody LineB lineB) {
 		Line line;
 		if(lineB.getId() == null || lineB.getId() < 0) {
 			line = new Line();
@@ -62,17 +71,14 @@ public class SetController {
 			line = setService.getLineById(lineB.getId());
 		}
 		line.setCreatedAt(new Date());		
-		setService.saveLine(line);
-		List<Plan> list = setService.getAllPlans();
-		if(list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
+		line = setService.saveLine(line);
+		return line;
 	}
 	
 	@RequestMapping(value = "/Shelve", produces = "application/json", method = RequestMethod.POST)
-	public Plan saveShelve(@RequestBody ShelveB shelveB) {		
+	public Shelve saveShelve(@RequestBody ShelveB shelveB) {		
 		Shelve shelve;
+		List<BoardB> boardBs = shelveB.getBoardBs();;
 		if(shelveB.getId() == null || shelveB.getId() < 0) {
 			shelve = new Shelve();
 			Line line = setService.getLineById(shelveB.getLineB().getId());
@@ -87,12 +93,21 @@ public class SetController {
 				shelve.setShelveType(setService.getShelveTypeById(shelveB.getShelveTypeB().getId()));
 			}
 		}
-		setService.saveShelve(shelve);
-		List<Plan> list = setService.getAllPlans();
-		if(list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
+		List<Board> blist = new ArrayList<Board>();
+		if(boardBs != null) {
+			for(BoardB boardB : boardBs) {
+				Board board = new Board();
+				board.setCreatedAt(new Date());
+				board.setFace(boardB.getFace());
+				board.setPosition(boardB.getPosition());
+				board.setShelve(shelve);
+				blist.add(board);
+			}	
+		}		
+		shelve.setBoards(blist);
+		shelve = setService.updateBoardsOfShelve(shelve);		
+		
+		return shelve;
 	}
 	
 	@RequestMapping(value = "/Line/{id}", method = RequestMethod.DELETE)

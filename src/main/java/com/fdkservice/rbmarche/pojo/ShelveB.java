@@ -1,11 +1,20 @@
 package com.fdkservice.rbmarche.pojo;
 
+import java.util.List;
+
 public class ShelveB {
 	
     private Long id;
     private LineB lineB;
     private ShelveTypeB shelveTypeB;
+    private List<BoardB> boardBs;
     
+	public List<BoardB> getBoardBs() {
+		return boardBs;
+	}
+	public void setBoardBs(List<BoardB> boardBs) {
+		this.boardBs = boardBs;
+	}
 	public Long getId() {
 		return id;
 	}

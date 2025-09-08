@@ -147,13 +147,32 @@ public class SetService {
 		shelveTypeRepository.saveAll(entities);
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRED)
 	public Board saveBoard(Board board) {
 		return boardRepository.save(board);
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Shelve updateBoardsOfShelve(Shelve shelve) {
+		List<Board> boards = shelve.getBoards();
+		shelve = shelveRepository.save(shelve);
+		for(Board b:shelve.getBoards()) {
+			boardRepository.delete(b);
+		}
+		for(Board b:boards) {
+			boardRepository.save(b);
+		}	
+		return shelve;
 	}
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void deleteAllBoard() {
 		boardRepository.deleteAll();
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void deleteBoard(Board board) {
+		boardRepository.delete(board);
 	}
 	
 	public List<Board> getAllBoards() {
