@@ -155,11 +155,11 @@ public class SetService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Shelve updateBoardsOfShelve(Shelve shelve) {
 		List<Board> boards = shelve.getBoards();
+		shelve.setBoards(null);
 		shelve = shelveRepository.save(shelve);
-		for(Board b:shelve.getBoards()) {
-			boardRepository.delete(b);
-		}
+		
 		for(Board b:boards) {
+			b.setShelve(shelve);
 			boardRepository.save(b);
 		}	
 		return shelve;

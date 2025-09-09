@@ -85,6 +85,12 @@ public class SetController {
 			shelve.setLine(line);			
 		} else {
 			shelve = setService.getShelveById(shelveB.getId());
+			List<Board> boards_orig = shelve.getBoards();
+			if(boards_orig != null) {
+				for(Board bo:boards_orig) {
+					setService.deleteBoard(bo);
+				}
+			}
 		}
 		shelve.setCreatedAt(new Date());
 		if(shelveB.getShelveTypeB() != null && shelveB.getShelveTypeB().getId() != null) {
