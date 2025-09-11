@@ -12,11 +12,13 @@ import com.fdkservice.rbmarche.entity.Line;
 import com.fdkservice.rbmarche.entity.Plan;
 import com.fdkservice.rbmarche.entity.Shelve;
 import com.fdkservice.rbmarche.entity.ShelveType;
+import com.fdkservice.rbmarche.entity.User;
 import com.fdkservice.rbmarche.repository.BoardRepository;
 import com.fdkservice.rbmarche.repository.LineRepository;
 import com.fdkservice.rbmarche.repository.PlanRepository;
 import com.fdkservice.rbmarche.repository.ShelveRepository;
 import com.fdkservice.rbmarche.repository.ShelveTypeRepository;
+import com.fdkservice.rbmarche.repository.UserRepository;
 
 @Service
 @Transactional
@@ -36,6 +38,22 @@ public class SetService {
 	
 	@Autowired
 	BoardRepository boardRepository; 
+	
+	@Autowired
+	UserRepository userRepository; 
+	
+	public int login(User user) {
+		if(user != null && user.getName() != null) {
+			List<User> users = userRepository.findUsersByName(user.getName());
+			if(users.size() == 1) {
+				String password = users.get(0).getPassword();
+				if(user.getPassword().hashCode() == Integer.parseInt(password)) {
+					return 0;
+				}
+			}
+		}
+		return 1;
+	}
 	
 	public long getCountOfAllLine() {
 		return lineRepository.count();
